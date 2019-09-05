@@ -35,7 +35,7 @@ class Board:
 
 def solve(board, depth, moves, ismax):
     if(depth == 0):
-        return [evaluate.evalBoard(board), moves]
+        return [evaluate.getScore(board), moves]
 
     rtn = [0, []]
 
@@ -54,7 +54,7 @@ def solve(board, depth, moves, ismax):
                     rtn = bval
             else:
                 if(rtn[0] >= bval[0]):
-                    rtn =bval
+                    rtn = bval
             board.unmove(i)
 
     return rtn
@@ -64,6 +64,7 @@ def solve(board, depth, moves, ismax):
 brd = Board()
 while True:
     sol = solve(brd, 5,  [], True)
+    print(sol)
     brd.move(sol[1][0])
     print(brd)
 
@@ -71,7 +72,3 @@ while True:
     brd.move(moveinp)
     print(brd)
 # ----- end test board -----
-
-print(brd)
-print(solve(brd, 5, [], True))
-print("done")

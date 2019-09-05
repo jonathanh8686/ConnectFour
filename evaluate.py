@@ -3,13 +3,13 @@ def checkBound(board, oriCord, trans):
     if(oriCord[0] + trans[0] < 0 or oriCord[1] + trans[1] < 0):
         return False
 
-    if(oriCord[0] + trans[0] >= len(board.state[oriCord[0]]) or oriCord[1] + trans[1] >= len(board.state[oriCord[0]])):
+    if(oriCord[0] + trans[0] >= len(board.state) or oriCord[1] + trans[1] >= len(board.state[oriCord[0]])):
         return False
 
     return True
 
 
-def countConnected(board): # returns an array [[a1, b1, c1], [a2, b2, c3]] with connected [ 2, 3, 4]
+def countConnected(board): # returns an array [[a1, b1, c1], [a2, b2, c3]] with connected [2, 3, 4]
     rtnCount = [[0, 0, 0, 0, 0], [0, 0, 0, 0, 0]]
 
     hort = [[0, 0], [1, 0], [2, 0], [3, 0]] # horizontal transform
@@ -22,7 +22,6 @@ def countConnected(board): # returns an array [[a1, b1, c1], [a2, b2, c3]] with 
 
     for i in range(len(board.state)):
         for j in range(len(board.state[i])):
-
             if(board.state[i][j] == -1):
                 continue
 
@@ -39,6 +38,7 @@ def countConnected(board): # returns an array [[a1, b1, c1], [a2, b2, c3]] with 
 
             vrtMatch = 0
             for t in vert:
+
                 if(not checkBound(board, [i, j], t)):
                     break
 
@@ -46,6 +46,7 @@ def countConnected(board): # returns an array [[a1, b1, c1], [a2, b2, c3]] with 
                     vrtMatch += 1
                 else:
                     break
+
             rtnCount[board.state[i][j]][vrtMatch] += 1
 
             tdiaMatch = 0
@@ -76,13 +77,33 @@ def countConnected(board): # returns an array [[a1, b1, c1], [a2, b2, c3]] with 
 
 
 def evalBoard(board): # return a real number [-1, 1] which depends on winner
+
     # TODO: make sure the AI is always aiming for a 4 (3 connect and 2 connect
     # don't matter unless there is room for a 4)
     score = 0
 
     matchCount = countConnected(board)
+
+    #if(matchCount[0][4] != 0):
+        #return 1000000000000
+        #if(board.turn == 0):
+        #    return 100000000000
+        #else:
+        #    return -100000000000
+
+    #if(matchCount[1][4] != 0):
+        #return 1000000000000
+        #if(board.turn == 0):
+        #    return -100000000000
+        #else:
+        #    return 100000000000
+    return matchCount
+
+def getScore(board):
+    score = 0
+
     mult = [0, 0, 1, 4, 99999]
-    #print(matchCount)
+    matchCount = evalBoard(board)
     for i in range(len(matchCount[0])):
         score += matchCount[0][i] * mult[i]
 
@@ -90,8 +111,6 @@ def evalBoard(board): # return a real number [-1, 1] which depends on winner
         score -= matchCount[1][i] * mult[i]
 
     return score
-
-
 
 
 
