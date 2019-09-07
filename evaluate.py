@@ -52,20 +52,6 @@ def evalBoard(board): # return a real number [-1, 1] which depends on winner
     score = 0
 
     matchCount = countConnected(board)
-
-    #if(matchCount[0][4] != 0):
-        #return 1000000000000
-        #if(board.turn == 0):
-        #    return 100000000000
-        #else:
-        #    return -100000000000
-
-    #if(matchCount[1][4] != 0):
-        #return 1000000000000
-        #if(board.turn == 0):
-        #    return -100000000000
-        #else:
-        #    return 100000000000
     return matchCount
 
 def getScore(board):

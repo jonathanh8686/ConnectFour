@@ -1,39 +1,9 @@
 import evaluate
+from board import Board
 
-class Board:
-    state = [[-1, -1, -1, -1, -1, -1] for i in range(7)] # columns first
-    turn = 0
-    def __init__(self, state):
-        self.state = state
-
-    def __init__(self):
-        pass
-
-    def move(self, col):
-        for i in range(len(self.state[col]))[::-1]: # always 7
-            if(self.state[col][i] == -1):
-                self.state[col][i] = self.turn
-                self.turn = int(not self.turn)
-                return True
-        return False
-
-    def unmove(self, col):
-        for i in range(len(self.state[col])):
-            if(self.state[col][i] != -1):
-                self.state[col][i] = -1
-                self.turn = int(not self.turn)
-                return True
-        return False
-
-    def __repr__(self):
-        rtnStr = ""
-        for i in range(len(self.state[0])):
-            for j in range(len(self.state)):
-                rtnStr += str(self.state[j][i]) + "\t"
-            rtnStr += "\n"
-        return rtnStr
-
-def solve(board, depth, moves, ismax):
+def solve(board, depth, moves, ismax, alpha, beta):
+    if(board.checkover()):
+        return [evaluate.getScore(board), moves]
     if(depth == 0):
         return [evaluate.getScore(board), moves]
 
@@ -42,7 +12,7 @@ def solve(board, depth, moves, ismax):
     # make each move
     for i in range(7):
         if(board.move(i)):
-            bval = solve(board, depth - 1, moves + [i], not ismax)
+            bval = solve(board, depth - 1, moves + [i], not ismax, alpha, beta)
 
             if(rtn == [0,[]]):
                 rtn = bval
@@ -52,10 +22,16 @@ def solve(board, depth, moves, ismax):
             if(ismax):
                 if(rtn[0] <= bval[0]):
                     rtn = bval
+                alpha = max(alpha, rtn[0])
             else:
                 if(rtn[0] >= bval[0]):
                     rtn = bval
+                beta = min(beta, rtn[0])
+
             board.unmove(i)
+
+            if(beta < alpha):
+                break
 
     return rtn
 
@@ -63,12 +39,18 @@ def solve(board, depth, moves, ismax):
 # ----- test board -----
 brd = Board()
 while True:
-    sol = solve(brd, 5,  [], True)
+    sol = solve(brd, 5,  [], True, -9999999999, 9999999999)
     print(sol)
     brd.move(sol[1][0])
     print(brd)
+    if(brd.checkover()):
+        print(brd.moves)
+        print("Game Over!")
 
     moveinp = int(input())
     brd.move(moveinp)
     print(brd)
+    if(brd.checkover()):
+        print(brd.moves)
+        print("Game Over!")
 # ----- end test board -----
