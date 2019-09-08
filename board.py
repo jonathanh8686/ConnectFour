@@ -10,6 +10,14 @@ class Board:
     def __init__(self):
         pass
 
+    def load(self, mv):
+        self.state = [[-1, -1, -1, -1, -1, -1] for i in range(7)]
+        self.turn = 0
+        for m in mv:
+            self.move(m)
+
+        print("Moves loaded.")
+
 
     def move(self, col):
         for i in range(len(self.state[col]))[::-1]: # always 7
@@ -17,7 +25,7 @@ class Board:
                 self.state[col][i] = self.turn
                 self.turn = int(not self.turn)
 
-                moves.append(col)
+                self.moves.append(col)
                 return True
         return False
 
@@ -27,7 +35,8 @@ class Board:
                 self.state[col][i] = -1
                 self.turn = int(not self.turn)
 
-                moves.remove(col)
+                self.moves = self.moves[:-1]
+                #print("removed " + str(col))
                 return True
         return False
 
